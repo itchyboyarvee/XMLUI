@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "TransitPH",
+    "slug": "transitph",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "transitph",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {},
+    "splash": {
+      "backgroundColor": "#0d1b2a",
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain"
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

@@ -1,6 +1,6 @@
-# [Project name]
+# TransitPH
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+TransitPH is a commuter-focused CALABARZON transit companion for discovering jeepney routes, terminals, saved journeys, and local weather.
 
 ## Run & Operate
 
@@ -22,15 +22,20 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/transitph/` — Expo mobile app and local commuter experience
+- `artifacts/transitph/lib/data.ts` — seeded CALABARZON terminals, routes, and weather data
+- `artifacts/transitph/context/TransitContext.tsx` — local authentication, saved routes, search limits, and admin CRUD state
+- `artifacts/transitph/app/` — Expo Router screens for login, tabs, route details, terminals, and admin management
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- TransitPH is frontend-first for the prototype; AsyncStorage keeps the demo usable without a backend.
+- Demo data is labeled in the UI because terminal and fare information has not been verified against official sources.
+- Admin writes and saved routes are local and deliberately isolated behind the admin role.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Commuters can search sample jeepney routes, inspect terminal locations, view trip estimates and walking instructions, check weather by CALABARZON location, and save frequent routes. Admin demo accounts can manage the local terminal and route directory.
 
 ## User preferences
 

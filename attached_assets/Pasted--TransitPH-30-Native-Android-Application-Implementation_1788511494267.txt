@@ -1,0 +1,1103 @@
+# TransitPH – 30% Native Android Application Implementation
+
+Build a functional **native Android mobile application called TransitPH**, an integrated multi-modal transit navigation and commuter safety system focused specifically on **CALABARZON, Philippines**.
+
+This is a **30% implementation/prototype** of the proposed TransitPH system. Prioritize the core functionality and make the implemented features actually functional.
+
+---
+
+# IMPORTANT TECHNOLOGY REQUIREMENT
+
+The application MUST be developed as a **native Android Studio application**.
+
+Use:
+
+* **Java** for all application logic
+* **XML** for all user interfaces/layouts
+* **Android Studio** as the development environment
+* **Gradle** for project/build configuration
+* **SQLite / Room Database** for local database storage
+* Android Activities and/or Fragments for navigation
+
+DO NOT use:
+
+* Kotlin
+* Jetpack Compose
+* Flutter
+* React Native
+* React
+* HTML/CSS/JavaScript for the application UI
+* Ionic
+* .NET MAUI
+
+The final project must be a standard Android Studio project that can be opened and run in Android Studio.
+
+---
+
+# 1. APPLICATION PURPOSE
+
+TransitPH helps commuters plan trips around **CALABARZON** by providing information about:
+
+* Jeepney terminals
+* Jeepney routes
+* Destinations
+* Walking directions
+* Basic fare information
+* Location-specific weather
+
+The PRIMARY feature for this 30% implementation is the:
+
+## Jeepney Terminal Tracker + Route Finder
+
+When a user searches for a destination, the application should show:
+
+1. Relevant jeepney terminal
+2. Jeepney routes available from that terminal
+3. Destinations served by each route
+4. Estimated fare
+5. Estimated travel time
+6. Basic walking instructions
+
+The proposed TransitPH solution specifically focuses on jeepney terminals, routes, destinations, and weather functionality.
+
+---
+
+# 2. ANDROID PROJECT STRUCTURE
+
+Create a clean Android Studio project using Java.
+
+Suggested structure:
+
+app/
+├── src/main/java/
+│   └── com.transitph.app/
+│       ├── activities/
+│       ├── adapters/
+│       ├── database/
+│       ├── models/
+│       ├── repositories/
+│       ├── services/
+│       └── utils/
+│
+├── src/main/res/
+│   ├── layout/
+│   ├── drawable/
+│   ├── mipmap/
+│   ├── values/
+│   └── menu/
+│
+└── AndroidManifest.xml
+
+Use appropriate separation between:
+
+* Activities
+* Models
+* Database
+* Adapters
+* Services
+* Utility classes
+
+Do not put the entire application logic inside one Activity.
+
+---
+
+# 3. REQUIRED SCREENS
+
+Create the following Android XML layouts and corresponding Java Activities/Fragments:
+
+### Authentication
+
+* activity_login.xml
+* activity_register.xml
+
+### Main Application
+
+* activity_main.xml
+
+### Route Finder
+
+* fragment_route_finder.xml
+* activity_route_results.xml
+* activity_route_details.xml
+
+### Terminals
+
+* fragment_terminals.xml
+* activity_terminal_details.xml
+
+### Weather
+
+* fragment_weather.xml
+
+### Saved Routes
+
+* fragment_saved_routes.xml
+
+### Profile
+
+* fragment_profile.xml
+
+### Admin
+
+* activity_admin_dashboard.xml
+* activity_manage_terminals.xml
+* activity_manage_routes.xml
+
+Use Android's standard navigation components where appropriate.
+
+---
+
+# 4. LOGIN AND REGISTRATION
+
+Implement functional authentication using the local database.
+
+## Registration
+
+Fields:
+
+* Full Name
+* Email
+* Password
+* Confirm Password
+
+Validate:
+
+* Required fields
+* Valid email
+* Password confirmation
+* Duplicate email
+
+Store users in the local database.
+
+## Login
+
+Fields:
+
+* Email
+* Password
+
+After successful login:
+
+→ Navigate to MainActivity
+
+Show an appropriate error for incorrect credentials.
+
+Passwords MUST NOT be stored as plain text. Use secure password hashing.
+
+---
+
+# 5. USER ROLES
+
+Implement two roles.
+
+## USER
+
+Can:
+
+* Search routes
+* View terminals
+* View route details
+* View weather
+* Save routes
+* Delete saved routes
+* View profile
+
+## ADMIN
+
+Can:
+
+* Search routes
+* View terminals
+* View routes
+* View weather
+* Add terminals
+* Edit terminals
+* Delete terminals
+* Add routes
+* Edit routes
+* Delete routes
+
+Implement role-based access control in Java.
+
+Normal users must NOT be able to access the admin screens.
+
+---
+
+# 6. MAIN SCREEN
+
+Create a modern mobile dashboard.
+
+The top should display:
+
+**TransitPH**
+
+"Your smarter way to commute around CALABARZON."
+
+Include a prominent Route Finder section:
+
+FROM
+
+[ Current Location / Select Location ]
+
+TO
+
+[ Enter Destination ]
+
+[ FIND ROUTE ]
+
+Below this:
+
+### Nearby Terminals
+
+Display terminal cards.
+
+### Weather
+
+Display a small weather summary.
+
+### Saved Routes
+
+Display recently saved routes.
+
+---
+
+# 7. BOTTOM NAVIGATION
+
+Implement Android bottom navigation.
+
+Use:
+
+🏠 Home
+🗺 Routes
+📍 Terminals
+☁ Weather
+👤 Profile
+
+Each navigation item must open an actual Fragment.
+
+Do not make navigation buttons decorative.
+
+---
+
+# 8. MAJOR MODULE – ROUTE FINDER
+
+This is the most important functional module.
+
+The user enters:
+
+FROM:
+Calamba, Laguna
+
+TO:
+Santa Rosa, Laguna
+
+Then taps:
+
+**FIND ROUTE**
+
+The application queries the local database and displays matching routes.
+
+Each route result should contain:
+
+* Route name
+* Terminal
+* Destination
+* Fare
+* Estimated travel time
+* Walking distance
+* Number of transfers
+
+Example:
+
+---
+
+CALAMBA → SANTA ROSA
+
+📍 Terminal:
+Calamba Jeepney Terminal
+
+🚌 Route:
+Calamba – Santa Rosa
+
+💰 Fare:
+₱30
+
+⏱ Estimated Time:
+45 minutes
+
+🚶 Walking:
+500 meters
+
+[ VIEW ROUTE ]
+
+[ SAVE ROUTE ]
+
+---
+
+---
+
+# 9. ROUTE SEARCH LOGIC
+
+Implement the route search in Java.
+
+The search should query the local database.
+
+Match:
+
+* Starting city
+* Destination
+* Route destination
+* Terminal location
+
+Support partial keyword searches.
+
+For example:
+
+User enters:
+
+"Santa Rosa"
+
+The system can return routes containing:
+
+* Santa Rosa
+* Santa Rosa Bayan
+* Balibago
+* Nuvali
+
+Rank the matching routes reasonably.
+
+The system does NOT need an advanced AI routing algorithm for the 30% implementation.
+
+A database-based route matching system is sufficient.
+
+---
+
+# 10. JEEPNEY TERMINAL MODULE
+
+Create a Terminal screen displaying jeepney terminals around CALABARZON.
+
+Each terminal should display:
+
+* Terminal name
+* City/Municipality
+* Province
+* Number of routes
+* Basic location information
+
+Example:
+
+**Calamba Jeepney Terminal**
+
+Calamba, Laguna
+
+Routes:
+12
+
+[ VIEW TERMINAL ]
+
+---
+
+# 11. TERMINAL DETAILS
+
+When a terminal is selected, open a Terminal Details Activity.
+
+Display:
+
+Terminal Name
+
+City/Municipality
+
+Province
+
+Coordinates
+
+Description
+
+### Available Routes
+
+Each route should display:
+
+Route name
+Destination
+Fare
+Estimated travel time
+
+Buttons:
+
+[ VIEW ROUTE ]
+
+[ SAVE TERMINAL ]
+
+---
+
+# 12. CRUD OPERATIONS
+
+Implement actual CRUD operations using the local database.
+
+## TERMINALS
+
+### CREATE
+
+Admin can add a terminal.
+
+Fields:
+
+* Terminal Name
+* City/Municipality
+* Province
+* Latitude
+* Longitude
+* Description
+
+### READ
+
+Users can view terminals.
+
+### UPDATE
+
+Admin can edit terminal information.
+
+### DELETE
+
+Admin can delete a terminal.
+
+---
+
+## ROUTES
+
+### CREATE
+
+Admin can add a route.
+
+Fields:
+
+* Route Name
+* Terminal
+* Destination
+* Fare
+* Estimated Travel Time
+* Description
+
+### READ
+
+Users can view routes.
+
+### UPDATE
+
+Admin can edit routes.
+
+### DELETE
+
+Admin can delete routes.
+
+Use confirmation dialogs before deleting records.
+
+Example:
+
+"Are you sure you want to delete this terminal?"
+
+[ CANCEL ] [ DELETE ]
+
+---
+
+# 13. LOCAL DATABASE
+
+Use **Room Database** if possible, otherwise use SQLite directly.
+
+Create these entities:
+
+## User
+
+* id
+* fullName
+* email
+* passwordHash
+* role
+
+## Terminal
+
+* id
+* name
+* city
+* province
+* latitude
+* longitude
+* description
+
+## Route
+
+* id
+* terminalId
+* routeName
+* destination
+* fare
+* estimatedTravelTime
+* description
+
+## SavedRoute
+
+* id
+* userId
+* routeId
+
+## RouteStop
+
+* id
+* routeId
+* stopName
+* latitude
+* longitude
+* sequence
+
+Create proper relationships between entities.
+
+---
+
+# 14. DATABASE SEED DATA
+
+Automatically create sample data when the application is first launched.
+
+Include realistic CALABARZON locations.
+
+Cover:
+
+* Laguna
+* Cavite
+* Batangas
+* Rizal
+* Quezon
+
+Include at least:
+
+### 15 terminals
+
+### 30 routes
+
+Include multiple routes and destinations so route searching can actually be demonstrated.
+
+IMPORTANT:
+
+Clearly treat these as **demo/sample data** unless verified against an official source.
+
+Do not claim that fictional sample terminals are official terminals.
+
+---
+
+# 15. SAVED ROUTES
+
+Allow users to save a route.
+
+On Route Details:
+
+[ SAVE ROUTE ]
+
+When clicked:
+
+"Route saved successfully."
+
+Saved routes should appear in:
+
+**Saved Routes**
+
+Each saved route should contain:
+
+* Route name
+* From
+* To
+* Fare
+* Estimated travel time
+
+Allow:
+
+[ DELETE ]
+
+to remove a saved route.
+
+Store saved routes in the database and associate them with the logged-in user.
+
+---
+
+# 16. WEATHER MODULE
+
+Create a Weather Fragment.
+
+Allow the user to select/search a CALABARZON location.
+
+Display:
+
+Location
+
+Temperature
+
+Weather condition
+
+Chance of rain
+
+Rainfall status
+
+Example:
+
+**Santa Rosa, Laguna**
+
+28°C
+
+Partly Cloudy
+
+Rain Probability: 65%
+
+⚠️ Rain may affect your walking route.
+
+If an external weather API is unavailable, implement a Java WeatherService with realistic mock data.
+
+Keep the WeatherService separated so a real API can be connected later.
+
+---
+
+# 17. MAP / LOCATION VIEW
+
+For the 30% prototype, implement a basic map/terminal location interface if a map API is available.
+
+Display terminal markers based on:
+
+* Latitude
+* Longitude
+
+When a terminal marker is selected:
+
+Show:
+
+Terminal name
+City
+Available routes
+
+If an API key is not available, create a clean map placeholder with terminal coordinates rather than making the entire application dependent on an unavailable API.
+
+---
+
+# 18. NAVIGATION FLOW
+
+The complete working flow should be:
+
+LOGIN
+↓
+MAIN ACTIVITY
+↓
+ROUTE FINDER
+↓
+ENTER FROM + TO
+↓
+FIND ROUTE
+↓
+ROUTE RESULTS
+↓
+ROUTE DETAILS
+↓
+SAVE ROUTE
+
+Another flow:
+
+MAIN
+↓
+TERMINALS
+↓
+TERMINAL DETAILS
+↓
+ROUTE DETAILS
+
+Another:
+
+MAIN
+↓
+WEATHER
+↓
+SELECT LOCATION
+↓
+WEATHER INFORMATION
+
+Admin:
+
+LOGIN
+↓
+ADMIN DASHBOARD
+↓
+MANAGE TERMINALS
+↓
+ADD / EDIT / DELETE
+
+and:
+
+ADMIN DASHBOARD
+↓
+MANAGE ROUTES
+↓
+ADD / EDIT / DELETE
+
+---
+
+# 19. FREE SEARCH LIMIT
+
+Implement the proposed free-user search limitation.
+
+Normal users receive:
+
+**5 route searches every 12 hours**
+
+Display:
+
+"Searches remaining: 5/5"
+
+After every successful route search:
+
+5/5
+↓
+4/5
+↓
+3/5
+↓
+2/5
+↓
+1/5
+↓
+0/5
+
+When the limit is reached:
+
+"You have reached your free route search limit. Upgrade to Premium for unlimited searches."
+
+Include:
+
+[ UPGRADE TO PREMIUM ]
+
+This button does NOT need to process real payments.
+
+Reset the counter after 12 hours.
+
+Store the necessary search-limit information locally.
+
+Admin users should not be restricted by the search limit.
+
+---
+
+# 20. USER INTERFACE DESIGN
+
+Use XML layouts and standard Android UI components.
+
+Recommended components:
+
+* ConstraintLayout
+* LinearLayout
+* ScrollView
+* RecyclerView
+* CardView / MaterialCardView
+* TextInputLayout
+* TextInputEditText
+* Button
+* ImageView
+* BottomNavigationView
+* Toolbar
+* FloatingActionButton where appropriate
+
+Make the interface:
+
+* Modern
+* Clean
+* Mobile-first
+* Easy to understand
+* Appropriate for commuters
+* Touch-friendly
+
+Use consistent:
+
+* Typography
+* Margins
+* Padding
+* Cards
+* Icons
+* Buttons
+
+Avoid overly complicated screens.
+
+---
+
+# 21. RECYCLERVIEWS
+
+Use RecyclerView for:
+
+* Route results
+* Terminals
+* Routes
+* Saved routes
+* Admin terminal list
+* Admin route list
+
+Create separate Java Adapter classes.
+
+For example:
+
+TerminalAdapter.java
+RouteAdapter.java
+SavedRouteAdapter.java
+
+Do not manually create every card in Java.
+
+---
+
+# 22. ERROR HANDLING
+
+Implement user-friendly error messages.
+
+Examples:
+
+Empty destination:
+
+"Please enter a destination."
+
+No route:
+
+"No available route was found for this destination."
+
+Login failure:
+
+"Incorrect email or password."
+
+Duplicate email:
+
+"An account with this email already exists."
+
+Database error:
+
+"Something went wrong. Please try again."
+
+Weather failure:
+
+"Unable to retrieve weather information."
+
+---
+
+# 23. SAMPLE DEMO ACCOUNTS
+
+Create these development accounts automatically:
+
+ADMIN
+
+Email:
+[admin@transitph.test](mailto:admin@transitph.test)
+
+Password:
+Admin123!
+
+USER
+
+Email:
+[user@transitph.test](mailto:user@transitph.test)
+
+Password:
+User123!
+
+Clearly label these as DEMO ACCOUNTS in the README.
+
+---
+
+# 24. ANDROID DESIGN REQUIREMENTS
+
+The application must work on common Android phone resolutions.
+
+Design primarily for:
+
+* 360 × 800
+* 375 × 812
+* 390 × 844
+* 412 × 915
+
+Make sure:
+
+* Text does not overflow
+* Buttons fit on small screens
+* RecyclerViews scroll properly
+* Forms are usable
+* Keyboard does not hide important fields
+* Screens work in portrait mode
+
+---
+
+# 25. PERMISSIONS
+
+If location functionality is implemented, correctly configure Android permissions.
+
+For example:
+
+ACCESS_FINE_LOCATION
+ACCESS_COARSE_LOCATION
+
+Request runtime permission properly.
+
+Do not request unnecessary permissions.
+
+---
+
+# 26. CODE REQUIREMENTS
+
+All application logic must be written in **Java**.
+
+All screens must use **XML layouts**.
+
+Use:
+
+* Java classes
+* XML layouts
+* Android Activities
+* Android Fragments
+* RecyclerViews
+* Adapters
+* Room/SQLite
+* Android SharedPreferences where appropriate
+* Android Manifest
+
+Do NOT convert any part of the project to Kotlin.
+
+Do NOT use Jetpack Compose.
+
+Do NOT create a web application instead of a native Android application.
+
+---
+
+# 27. 30% IMPLEMENTATION CHECKLIST
+
+The final application MUST demonstrate all of these:
+
+### 1. Core System Structure
+
+✓ Native Android Studio project
+✓ Java architecture
+✓ XML layouts
+✓ Activities/Fragments
+✓ Database layer
+
+### 2. Authentication / Access Control
+
+✓ Registration
+✓ Login
+✓ Logout
+✓ User role
+✓ Admin role
+✓ Protected admin functionality
+
+### 3. Major Functional Module
+
+✓ Route Finder
+✓ Jeepney Terminal Tracker
+✓ Route Results
+✓ Terminal Details
+
+### 4. CRUD
+
+✓ Create terminal
+✓ Read terminal
+✓ Update terminal
+✓ Delete terminal
+✓ Create route
+✓ Read route
+✓ Update route
+✓ Delete route
+
+### 5. Navigation
+
+✓ Login → Main
+✓ Main → Route Finder
+✓ Route Finder → Results
+✓ Results → Route Details
+✓ Main → Terminals
+✓ Terminals → Terminal Details
+✓ Main → Weather
+✓ Main → Saved Routes
+✓ Admin → Management
+
+### 6. User Interface
+
+✓ Native Android XML UI
+✓ Mobile-first design
+✓ RecyclerViews
+✓ Cards
+✓ Bottom navigation
+✓ Forms
+✓ Dialogs
+
+### 7. Frontend + Backend/Logic + Database
+
+✓ XML frontend
+✓ Java application logic
+✓ Room/SQLite database
+✓ Database CRUD
+✓ Authentication
+✓ Route search queries
+✓ Saved routes
+
+---
+
+# 28. WHAT NOT TO IMPLEMENT YET
+
+This is only a 30% implementation.
+
+Do NOT spend most of the development time implementing:
+
+* Real payment processing
+* Full Premium subscription system
+* Advanced traffic prediction
+* AI-powered routing
+* Real-time GPS tracking
+* Push notifications
+* Complex multilingual translation
+* Full offline maps
+* Advanced safety scoring
+* Production-level cloud infrastructure
+
+Create placeholders/interfaces for future features if useful, but focus on making the required 30% actually functional.
+
+---
+
+# 29. README
+
+Create a README.md explaining:
+
+1. Project overview
+2. Purpose of TransitPH
+3. CALABARZON scope
+4. Technologies used
+5. Android Studio setup
+6. Java version
+7. Database setup
+8. Demo accounts
+9. Implemented features
+10. Database structure
+11. Future features
+12. How the application satisfies the 30% implementation requirements
+
+---
+
+# 30. FINAL BUILD REQUIREMENT
+
+Before finishing, verify that the project can be opened in **Android Studio** and built successfully.
+
+Make sure there are no unresolved Java/XML errors.
+
+The final application must be a **native Android Studio Java + XML application**, not a website.
+
+The evaluator should be able to install/run the application and demonstrate:
+
+1. Register
+2. Login
+3. Access the Home screen
+4. Search for a route
+5. View route results
+6. View terminal details
+7. Save a route
+8. View saved routes
+9. Check weather
+10. Login as admin
+11. Add a terminal
+12. Edit a terminal
+13. Delete a terminal
+14. Add/edit/delete routes
+15. Logout
+
+This working flow represents the intended **30% implementation** of TransitPH.
